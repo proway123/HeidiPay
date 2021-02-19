@@ -1,0 +1,37 @@
+{% extends '_base.html' %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+<h1>Homepage</h1>
+Welcome to HeidiPay, {{ user.username }}!
+<p><a href="{% url 'logout' %}">Log Out</a></p>
+{% if payment_method.card_number is None %}
+    <b><h3>Add Card Payment Method</h3></b>
+<form method="POST">
+        {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Card</button>
+</form>
+
+{% else %}
+    <b><h3>Payment Method Details</h3></b>
+    <ul>
+        <li>Card Number: {{ payment_method.card_number }}</li>
+        <li>Balance: {{ payment_method.balance }} &#163;</li>
+    </ul>
+{% endif %}
+
+
+
+<b><h3>Transactions</h3></b>
+{% for transaction in transactions %}
+<ul>
+    <li><p>Transaction ID: {{ transaction.id }}</p></li>
+    <li><p>Merchant name: {{ transaction.merchant_name }}</p></li>
+    <li><p>Amount: {{ transaction.amount }}</p></li>
+    <br>
+</ul>
+{% empty %}
+<p>No transactions.</p>
+{% endfor %}
+
+{% endblock content %}
